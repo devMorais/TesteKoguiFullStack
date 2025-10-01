@@ -1,29 +1,40 @@
-<header class="main-header">
-  <h1>Pokédex Digital</h1>
-  <p>Explore o mundo dos Pokémon com nossa Pokédex interativa.</p>
-</header>
+<app-header></app-header>
 
-<section class="stats-header">
-  <div><span>6</span> Pokémon</div>
-  <div><span>18</span> Tipos</div>
-  <div><span>9</span> Gerações</div>
-</section>
+<main class="content p-4 md:p-8">
+  <section class="stats-header bg-purple-600 text-white p-4 rounded-xl shadow-lg mb-8 flex justify-around">
+    <div><span class="font-bold text-3xl">6</span><br> Pokémon (Time)</div>
+    <div><span class="font-bold text-3xl">18</span><br> Tipos</div>
+    <div><span class="font-bold text-3xl">9</span><br> Gerações</div>
+  </section>
 
-<main class="content">
-  <div class="filter-header">
-    <h2>Pokémon Descobertos</h2>
-    <div class="filter-buttons">
-      <button mat-button>Todos os Tipos</button>
-      <button mat-button>Fogo</button>
-      <button mat-button>Água</button>
-      <button mat-button>Grama</button>
-      <button mat-button>Elétrico</button>
+  <div class="filter-header mb-6">
+    <h2 class="text-2xl font-semibold mb-4">Pokémon Descobertos (Time: {{ currentTeamCount }} / 6)</h2>
+    <div class="filter-buttons flex flex-wrap gap-2">
+      <button mat-stroked-button [class.bg-blue-200]="selectedType === 'all'" (click)="filterByType('all')">Todos
+        os Tipos</button>
+      <button mat-stroked-button [class.bg-red-200]="selectedType === 'fire'"
+        (click)="filterByType('fire')">Fogo</button>
+      <button mat-stroked-button [class.bg-blue-200]="selectedType === 'water'"
+        (click)="filterByType('water')">Água</button>
+      <button mat-stroked-button [class.bg-green-200]="selectedType === 'grass'"
+        (click)="filterByType('grass')">Grama</button>
+      <button mat-stroked-button [class.bg-yellow-200]="selectedType === 'electric'"
+        (click)="filterByType('electric')">Elétrico</button>
     </div>
   </div>
 
-  <div class="pokedex-grid">
+  <div *ngIf="isLoading" class="flex justify-center items-center h-40">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="!isLoading && pokemons.length > 0"
+    class="pokedex-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
     <app-pokemon-card *ngFor="let p of pokemons" [pokemon]="p" (onFavorite)="handleFavorite($event)"
       (onAddToTeam)="handleAddToTeam($event)">
     </app-pokemon-card>
+  </div>
+
+  <div *ngIf="!isLoading && pokemons.length === 0" class="text-center p-10 bg-gray-100 rounded-lg">
+    <h3 class="text-xl text-gray-600">Nenhum Pokémon encontrado com o filtro '{{ selectedType | titlecase }}'.</h3>
   </div>
 </main>

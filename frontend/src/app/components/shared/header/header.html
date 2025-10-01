@@ -1,0 +1,32 @@
+<mat-toolbar color="primary" class="shadow-lg sticky top-0 z-50">
+  <span class="text-xl font-bold">Pokédex Digital</span>
+  <span class="flex-grow"></span>
+
+  <div class="nav-links flex gap-2">
+    <button mat-button routerLink="/pokedex" routerLinkActive="active-link">
+      <mat-icon>search</mat-icon>
+      Pokédex
+    </button>
+
+    <button mat-button routerLink="/favorites" routerLinkActive="active-link">
+      <mat-icon>favorite</mat-icon>
+      Favoritos
+    </button>
+
+    <button mat-button routerLink="/team" routerLinkActive="active-link">
+      <mat-icon>shield</mat-icon>
+      Minha Equipe
+    </button>
+  </div>
+
+  <button mat-icon-button (click)="logout()" aria-label="Sair da aplicação">
+    <mat-icon>logout</mat-icon>
+  </button>
+</mat-toolbar>
+
+<!-- Se precisar de estilos adicionais para o link ativo, adicione em header.scss, por exemplo:
+.active-link {
+    background-color: #6d28d9; // Exemplo de roxo mais escuro
+    color: white !important;
+}
+-->

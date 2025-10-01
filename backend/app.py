@@ -114,15 +114,48 @@ def login():
     return jsonify(access_token=access_token)
 
 @app.route('/pokemons', methods=['GET'])
+@jwt_required(optional=True)
 def handle_pokemons():
+    """Lista pokémons da API e marca favoritos/equipe do usuário logado."""
     page = request.args.get('page', 1, type=int)
-    pokemon_data = get_pokemon_list(page=page)
+    tipo = request.args.get('tipo', None, type=str) 
+    pokemon_data = get_pokemon_list(page=page, tipo=tipo) 
 
-    if pokemon_data:
-        return jsonify(pokemon_data)
-    else:
+    if not pokemon_data:
         return jsonify({"message": "Não foi possível buscar os dados da PokéAPI."}), 500
+
+    results = pokemon_data.get("results", [])
+
+    current_user_id = get_jwt_identity()
+    if not current_user_id:
+        for p in results:
+            p["isFavorite"] = False
+            p["isInTeam"] = False
+        return jsonify({"results": results})
+
+    user_pokemons = PokemonUsuario.query.filter_by(id_usuario=current_user_id).all()
+    favoritos_ids = {p.codigo_pokemon for p in user_pokemons if p.favorito}
+    equipe_ids = {p.codigo_pokemon for p in user_pokemons if p.grupo_batalha}
+
+    for p in results:
+        codigo = int(p["url"].split("/")[6])
+        p["isFavorite"] = codigo in favoritos_ids
+        p["isInTeam"] = codigo in equipe_ids
+
+    return jsonify({"results": results})
     
+@app.route('/user/pokemon/<int:codigo>', methods=['DELETE'])
+@jwt_required()
+def remove_user_pokemon(codigo):
+    current_user_id = get_jwt_identity()
+    pokemon = PokemonUsuario.query.filter_by(id_usuario=current_user_id, codigo_pokemon=codigo).first()
+
+    if not pokemon:
+        return jsonify({"message": "Pokémon não encontrado"}), 404
+
+    pokemon.favorito = False
+    db.session.commit()
+    return jsonify({"message": f"{pokemon.nome_pokemon} removido dos favoritos!"})
     
 @app.route('/user/pokemon', methods=['POST'])
 @jwt_required()
