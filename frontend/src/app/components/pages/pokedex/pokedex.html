@@ -1,0 +1,29 @@
+<header class="main-header">
+  <h1>Pokédex Digital</h1>
+  <p>Explore o mundo dos Pokémon com nossa Pokédex interativa.</p>
+</header>
+
+<section class="stats-header">
+  <div><span>6</span> Pokémon</div>
+  <div><span>18</span> Tipos</div>
+  <div><span>9</span> Gerações</div>
+</section>
+
+<main class="content">
+  <div class="filter-header">
+    <h2>Pokémon Descobertos</h2>
+    <div class="filter-buttons">
+      <button mat-button>Todos os Tipos</button>
+      <button mat-button>Fogo</button>
+      <button mat-button>Água</button>
+      <button mat-button>Grama</button>
+      <button mat-button>Elétrico</button>
+    </div>
+  </div>
+
+  <div class="pokedex-grid">
+    <app-pokemon-card *ngFor="let p of pokemons" [pokemon]="p" (onFavorite)="handleFavorite($event)"
+      (onAddToTeam)="handleAddToTeam($event)">
+    </app-pokemon-card>
+  </div>
+</main>

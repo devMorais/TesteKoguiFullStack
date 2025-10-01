@@ -1,0 +1,36 @@
+<div class="register-container">
+  <mat-card>
+    <mat-card-title class="text-center my-3">Crie sua Conta</mat-card-title>
+    <mat-card-content>
+      <form class="register-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="fill">
+          <mat-label>Nome Completo</mat-label>
+          <input matInput formControlName="nome" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Login</mat-label>
+          <input matInput formControlName="login" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" required>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Senha</mat-label>
+          <input matInput type="password" formControlName="senha" required>
+        </mat-form-field>
+
+        <mat-card-actions>
+          <button mat-raised-button color="primary" class="register-button" type="submit"
+            [disabled]="registerForm.invalid">REGISTRAR</button>
+        </mat-card-actions>
+      </form>
+    </mat-card-content>
+    <div class="login-link">
+      <span>Já tem uma conta? <a routerLink="/login">Faça o login</a></span>
+    </div>
+  </mat-card>
+</div>

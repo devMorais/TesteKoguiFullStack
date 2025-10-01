@@ -1,0 +1,30 @@
+.pokedex-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 20px;
+}
+
+.main-header {
+  background-color: #F08030;
+  /* Laranja */
+  color: white;
+  padding: 20px;
+}
+
+.stats-header {
+  display: flex;
+  justify-content: space-around;
+  background-color: #6890F0;
+  /* Roxo/Azul */
+  color: white;
+  padding: 10px;
+}
+
+.content {
+  padding: 20px;
+}
+
+.filter-header {
+  margin-bottom: 20px;
+}

@@ -1,0 +1,34 @@
+<mat-card class="pokemon-card" *ngIf="pokemon">
+  <div class="card-header-info">
+    <span>#{{ getPokemonNumber() }}</span>
+    <div class="type-tags" *ngIf="pokemonDetails">
+      <span *ngFor="let typeInfo of pokemonDetails.types" class="type-tag {{ typeInfo.type.name }}">
+        {{ typeInfo.type.name }}
+      </span>
+    </div>
+  </div>
+
+  <img mat-card-image [src]="getPokemonImage()" [alt]="pokemon.name || pokemon.nome_pokemon">
+
+  <mat-card-title>{{ (pokemon.name || pokemon.nome_pokemon) | titlecase }}</mat-card-title>
+
+  <mat-card-content *ngIf="pokemonDetails" class="stats">
+    <div class="stat-item" *ngFor="let stat of pokemonDetails.stats">
+      <span class="stat-name">{{ stat.stat.name }}</span>
+      <span class="stat-value">{{ stat.base_stat }}</span>
+      <mat-progress-bar mode="determinate" [value]="stat.base_stat"></mat-progress-bar>
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions align="end">
+    <button mat-icon-button (click)="favoritar()" [color]="pokemon.isFavorite ? 'warn' : 'basic'"
+      aria-label="Marcar como favorito">
+      <mat-icon>{{ pokemon.isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+    </button>
+
+    <button mat-icon-button (click)="adicionarAoTime()" [color]="pokemon.isInTeam ? 'primary' : 'basic'"
+      aria-label="Adicionar à equipe">
+      <mat-icon>{{ pokemon.isInTeam ? 'shield' : 'shield_outline' }}</mat-icon>
+    </button>
+  </mat-card-actions>
+</mat-card>
