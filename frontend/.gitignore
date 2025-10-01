@@ -1,0 +1,18 @@
+# Ignorar arquivos do Python e Flask (Backend)
+/backend/venv/
+/backend/__pycache__/
+/backend/instance/
+/backend/pokedex.db
+*.pyc
+
+# Ignorar arquivos do Node e Angular (Frontend)
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.angular/
+npm-debug.log*
+
+# Ignorar arquivos do VS Code
+.vscode/
+
+# Ignorar arquivos de sistema
+.DS_Store
