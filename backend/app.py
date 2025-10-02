@@ -60,9 +60,6 @@ class TipoPokemon(db.Model):
     id = db.Column('id_tipo_pokemon', db.Integer, primary_key=True)
     descricao = db.Column('descricao', db.String(50), unique=True, nullable=False)
 
-
-# --- ROTAS DA API ---
-
 @app.route('/register', methods=['POST'])
 def register():
     data = request.get_json()

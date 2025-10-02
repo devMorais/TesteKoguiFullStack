@@ -1,8 +1,21 @@
-<div class="pokedex-grid" *ngIf="team.length > 0">
-  <app-pokemon-card *ngFor="let p of team" [pokemon]="p"></app-pokemon-card>
-</div>
+<app-header></app-header>
 
-<div *ngIf="team.length === 0" class="empty-message">
-  <h2>Sua equipe de batalha está vazia.</h2>
-  <p>Vá para a página de Início para adicionar Pokémon à sua equipe.</p>
-</div>
+<main class="content p-4 md:p-8">
+  <h2 class="text-3xl font-bold mb-6 text-gray-800">Minha Equipe de Batalha ({{ team.length }} / 6)</h2>
+
+  <div *ngIf="isLoading" class="flex justify-center items-center h-40">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div class="pokedex-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" *ngIf="!isLoading && team.length > 0">
+    <app-pokemon-card *ngFor="let p of team" [pokemon]="p" (onFavorite)="handleFavorite($event)"
+      (onAddToTeam)="handleAddToTeam($event)">
+    </app-pokemon-card>
+  </div>
+
+  <div *ngIf="!isLoading && team.length === 0" class="empty-message text-center p-10 bg-gray-100 rounded-lg">
+    <h3 class="text-xl font-semibold text-gray-600">Sua equipe de batalha está vazia.</h3>
+    <p class="text-gray-500 mt-2">Vá para a <a routerLink="/pokedex" class="text-blue-600 hover:underline">Listagem
+        Principal</a> para adicionar Pokémon (máximo de 6).</p>
+  </div>
+</main>

@@ -1,30 +1,124 @@
-.pokedex-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-  padding: 20px;
+// Container principal para limitar a largura e centralizar.
+.content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0;
 }
 
-.main-header {
-  background-color: #F08030;
-  /* Laranja */
+// Banner superior laranja
+.top-banner {
+  position: relative;
+  background-color: #F7786B; // Laranja vivo
+  border-radius: 0 0 1rem 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+
+  padding: 2.5rem 2rem 70px 2rem;
+  text-align: left;
   color: white;
-  padding: 20px;
+
+  /* Adicionar o ícone da Pokébola aqui para maior fidelidade, se o HTML permitir. */
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
 }
 
-.stats-header {
+// Barra roxa (Centralizada, ligeiramente recuada)
+.stats-bar {
+  position: absolute;
+
+  // Centraliza o bloco horizontalmente
+  left: 50%;
+  transform: translateX(-50%);
+
+  background-color: #7B61FF; // Roxo vibrante
+  border-radius: 0.5rem;
+
+  // Define a largura máxima para parecer mais estreito que o banner
+  width: 95%;
+  max-width: 800px;
+
+  bottom: -30px;
+  padding: 0.8rem 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+
   display: flex;
   justify-content: space-around;
-  background-color: #6890F0;
-  /* Roxo/Azul */
-  color: white;
-  padding: 10px;
+
+  div {
+    text-align: center;
+    color: white;
+
+    /* CORREÇÃO: Estilo do rótulo (texto base) */
+    font-size: 0.9rem;
+
+    span {
+      display: block;
+      font-weight: 700;
+      /* Mais negrito */
+      font-size: 1.8rem;
+      /* Aumenta o tamanho do número */
+      line-height: 1;
+      /* Para aproximar o número do rótulo */
+      margin-bottom: 0.2rem;
+    }
+  }
 }
 
-.content {
-  padding: 20px;
+// Botões de filtro (chips coloridos)
+.filter-buttons button {
+  border-radius: 9999px;
+  padding: 0.35rem 1.2rem;
+  font-weight: 600;
+  transition: 0.2s;
+  border: none;
+
+  &.bg-red-200 {
+    background-color: #EE8130;
+  }
+
+  &.bg-blue-200 {
+    background-color: #6390F0;
+  }
+
+  &.bg-green-200 {
+    background-color: #7AC74C;
+  }
+
+  &.bg-yellow-200 {
+    background-color: #F7D02C;
+  }
+
+  &.bg-gray-200 {
+    background-color: #ECECEC;
+    color: #333 !important;
+    border: 1px solid #CCC;
+  }
+}
+
+// Grid de cards
+.pokedex-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+// Corpo principal da página
+.main-body {
+  padding-top: 50px;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .filter-header {
-  margin-bottom: 20px;
+  margin-bottom: 1.5rem;
 }

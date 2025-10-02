@@ -4,11 +4,13 @@ import { PokemonService } from '../../../services/pokemon';
 import { PokemonCardComponent } from '../../shared/pokemon-card/pokemon-card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HeaderComponent } from '../../shared/header/header';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar'; // Importar MatSnackBar
+import { MatButtonModule } from '@angular/material/button'; // Certifique-se deste import
 
 @Component({
   selector: 'app-pokedex',
   standalone: true,
-  imports: [CommonModule, PokemonCardComponent, MatProgressSpinnerModule, TitleCasePipe, HeaderComponent],
+  imports: [CommonModule, PokemonCardComponent, MatProgressSpinnerModule, TitleCasePipe, HeaderComponent, MatButtonModule, MatSnackBarModule],
   templateUrl: './pokedex.html',
   styleUrls: ['./pokedex.scss']
 })
@@ -19,7 +21,10 @@ export class PokedexComponent implements OnInit {
   private maxTeamSize = 6;
   public currentTeamCount: number = 0;
 
-  constructor(private pokemonService: PokemonService) { }
+  constructor(
+    private pokemonService: PokemonService,
+    private snackBar: MatSnackBar
+  ) { }
 
   ngOnInit(): void {
     this.loadPokemons();
@@ -36,6 +41,7 @@ export class PokedexComponent implements OnInit {
       error: (err) => {
         console.error('Erro ao carregar Pokémon:', err);
         this.isLoading = false;
+        this.snackBar.open('Erro ao carregar Pokémon da API.', 'Fechar');
       }
     });
   }
@@ -46,14 +52,16 @@ export class PokedexComponent implements OnInit {
 
   handleFavorite(pokemon: any): void {
     const codigo = pokemon.url ? pokemon.url.split('/')[6] : pokemon.codigo_pokemon;
+    let message: string;
 
     if (pokemon.isFavorite) {
       this.pokemonService.unfavoritePokemon(codigo).subscribe({
         next: () => {
           pokemon.isFavorite = false;
-          console.log(`${pokemon.name || pokemon.nome_pokemon} removido dos favoritos!`);
+          message = `${pokemon.name || pokemon.nome_pokemon} removido dos favoritos!`;
+          this.snackBar.open(message, 'OK', { duration: 3000 });
         },
-        error: (err) => console.error(err)
+        error: (err) => this.snackBar.open(err.error?.message || 'Erro ao remover dos favoritos.', 'Fechar')
       });
     } else {
       const pokemonData = {
@@ -65,9 +73,10 @@ export class PokedexComponent implements OnInit {
       this.pokemonService.favoritePokemon(pokemonData).subscribe({
         next: () => {
           pokemon.isFavorite = true;
-          console.log(`${pokemon.name || pokemon.nome_pokemon} foi adicionado aos favoritos!`);
+          message = `${pokemon.name || pokemon.nome_pokemon} adicionado aos favoritos!`;
+          this.snackBar.open(message, 'YAY!', { duration: 3000 });
         },
-        error: (err) => console.error(err)
+        error: (err) => this.snackBar.open(err.error?.message || 'Erro ao adicionar aos favoritos.', 'Fechar')
       });
     }
   }
@@ -87,7 +96,7 @@ export class PokedexComponent implements OnInit {
       newTeam = newTeam.filter((id: string) => id !== codigo);
     } else {
       if (newTeam.length >= this.maxTeamSize) {
-        console.warn('Sua equipe já tem 6 Pokémon!');
+        this.snackBar.open('ERRO: Sua equipe de batalha já tem 6 Pokémon!', 'Fechar', { duration: 5000 });
         return;
       }
       newTeam.push(codigo);
@@ -97,14 +106,15 @@ export class PokedexComponent implements OnInit {
       next: () => {
         pokemon.isInTeam = !pokemon.isInTeam;
         this.updateTeamCount();
-        console.log(`${pokemon.name || pokemon.nome_pokemon} foi ${pokemon.isInTeam ? 'adicionado' : 'removido'} da sua equipe!`);
 
-        // Caso o Pokémon tenha sido adicionado, se ele não era favorito, agora é (Regra do Backend)
+        const action = pokemon.isInTeam ? 'adicionado' : 'removido';
+        const message = `${pokemon.name || pokemon.nome_pokemon} foi ${action} da sua equipe!`;
+        this.snackBar.open(message, 'OK', { duration: 3000 });
         if (pokemon.isInTeam) {
           pokemon.isFavorite = true;
         }
       },
-      error: (err) => console.error(err)
+      error: (err) => this.snackBar.open(err.error?.message || 'Erro ao atualizar equipe.', 'Fechar')
     });
   }
 

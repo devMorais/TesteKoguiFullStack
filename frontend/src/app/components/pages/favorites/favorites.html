@@ -1,0 +1,23 @@
+<app-header></app-header>
+
+<main class="content p-4 md:p-8">
+  <h2 class="text-3xl font-bold mb-6 text-gray-800">Meus Pokémon Favoritos</h2>
+
+  <div *ngIf="isLoading" class="flex justify-center items-center h-40">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="!isLoading && favorites.length > 0"
+    class="pokedex-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <app-pokemon-card *ngFor="let p of favorites" [pokemon]="p" (onFavorite)="handleFavorite($event)"
+      (onAddToTeam)="handleAddToTeam($event)">
+    </app-pokemon-card>
+  </div>
+
+  <div *ngIf="!isLoading && favorites.length === 0" class="empty-message text-center p-10 bg-gray-100 rounded-lg">
+    <h3 class="text-xl font-semibold text-gray-600">Você ainda não tem Pokémon favoritos.</h3>
+    <p class="text-gray-500 mt-2">Marque seus favoritos na <a [routerLink]="['/pokedex']"
+        class="text-blue-600 hover:underline">Listagem Principal</a>!</p>
+
+  </div>
+</main>

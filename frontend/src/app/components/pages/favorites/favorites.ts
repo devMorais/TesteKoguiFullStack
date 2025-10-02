@@ -2,32 +2,32 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PokemonService } from '../../../services/pokemon';
 import { PokemonCardComponent } from '../../shared/pokemon-card/pokemon-card';
-import { HeaderComponent } from '../../shared/header/header';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterLink } from '@angular/router';
+import { HeaderComponent } from '../../shared/header/header';
 
 @Component({
-  selector: 'app-team',
+  selector: 'app-favorites',
   standalone: true,
-  imports: [CommonModule, PokemonCardComponent, HeaderComponent, MatProgressSpinnerModule, RouterLink],
-  templateUrl: './team.html',
-  styleUrls: ['./team.scss']
+  imports: [CommonModule, PokemonCardComponent, MatProgressSpinnerModule, RouterLink, HeaderComponent],
+  templateUrl: './favorites.html',
+  styleUrls: ['./favorites.scss']
 })
-export class TeamComponent implements OnInit {
-  team: any[] = [];
+export class FavoritesComponent implements OnInit {
+  favorites: any[] = [];
   isLoading: boolean = true;
 
   constructor(private pokemonService: PokemonService) { }
 
   ngOnInit(): void {
-    this.loadTeam();
+    this.loadFavorites();
   }
 
-  loadTeam(): void {
+  loadFavorites(): void {
     this.isLoading = true;
-    this.pokemonService.getTeam().subscribe({
+    this.pokemonService.getFavorites().subscribe({
       next: (response) => {
-        this.team = response.map((p: any) => ({
+        this.favorites = response.map((p: any) => ({
           ...p,
           isFavorite: p.favorito,
           isInTeam: p.grupo_batalha,
@@ -36,7 +36,7 @@ export class TeamComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Erro ao carregar equipe:', err);
+        console.error('Erro ao carregar favoritos:', err);
         this.isLoading = false;
       }
     });
@@ -46,7 +46,7 @@ export class TeamComponent implements OnInit {
     const codigo = pokemon.codigo_pokemon;
     this.pokemonService.unfavoritePokemon(codigo).subscribe({
       next: () => {
-        pokemon.isFavorite = false;
+        this.favorites = this.favorites.filter(p => p.codigo_pokemon !== codigo);
         console.log(`${pokemon.nome_pokemon} removido dos favoritos!`);
       },
       error: (err) => console.error(err)
@@ -55,14 +55,24 @@ export class TeamComponent implements OnInit {
 
   handleAddToTeam(pokemon: any): void {
     const codigo = pokemon.codigo_pokemon;
-    let newTeam = this.team
-      .filter(p => p.codigo_pokemon.toString() !== codigo.toString())
+    let newTeam = this.favorites
+      .filter(p => p.isInTeam)
       .map(p => p.codigo_pokemon.toString());
+
+    if (pokemon.isInTeam) {
+      newTeam = newTeam.filter((id: string) => id !== codigo.toString());
+    } else {
+      if (newTeam.length >= 6) {
+        console.warn('Sua equipe já tem 6 Pokémon!');
+        return;
+      }
+      newTeam.push(codigo.toString());
+    }
 
     this.pokemonService.setTeam(newTeam).subscribe({
       next: () => {
-        this.team = this.team.filter(p => p.codigo_pokemon !== codigo);
-        console.log(`${pokemon.nome_pokemon} removido da sua equipe!`);
+        pokemon.isInTeam = !pokemon.isInTeam;
+        console.log(`${pokemon.nome_pokemon} foi ${pokemon.isInTeam ? 'adicionado' : 'removido'} da sua equipe!`);
       },
       error: (err) => console.error(err)
     });
